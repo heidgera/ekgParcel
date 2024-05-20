@@ -194,6 +194,7 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio})=> {
     });
 
     tempControl.onready = ()=>{
+      console.log("Clear");
       clearInterval(testInt);
     }
 
