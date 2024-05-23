@@ -4,7 +4,8 @@ var obtains = [
   './src/dualGraph.js',
   './src/controller.js',
   'fs',
-  'µ/audio.js'
+  'µ/audio.js',
+  'child_process'
 ];
 
 var electron = require('electron');
@@ -13,7 +14,7 @@ var electron = require('electron');
 
 var openDialog = (method, config)=>{return electron.ipcRenderer.invoke('dialog', method, config)};
 
-obtain(obtains, ({Graph}, { TempControl }, fs, {audio})=> {
+obtain(obtains, ({Graph}, { TempControl }, fs, {audio},{execSync})=> {
 
   exports.app = {};
 
@@ -155,7 +156,7 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio})=> {
     var testInt = setInterval(()=>{
       var osc = (Date.now()/1500.)*Math.PI;
       //tempControl.emit("envelope",Math.cos(osc)*30+Math.sin(Date.now()/200)*10+Math.cos(Date.now()/100)*5);
-      tempControl.emit("envelope",50*Math.pow(Math.sin(osc),63) * Math.sin(osc+1.5)*8);
+      //tempControl.emit("envelope",50*Math.pow(Math.sin(osc),63) * Math.sin(osc+1.5)*8);
     },20);
 
     var prevMin = 0;
@@ -182,7 +183,7 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio})=> {
 
       audio.left.setFrequency(vals[bin]);
       audio.right.setFrequency(vals[bin]/2);
-      crnTmp.add({x: Date.now(), y: cnt});
+      crnTmp.add({x: Date.now(), y: cnt-50});
       //else if(cnt != crnTmp[0].y) crnTmp[0].x = Date.now();
       let recent = crnTmp.filter(val=>val.x>Date.now()-graphTime);
       let min = recent.reduce((acc,val)=>Math.min(acc,val.y),1000000);
@@ -229,6 +230,9 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio})=> {
       //     },500);
       //   },500);
       // }
+      if(e.key ==='Escape'){
+        execSync('sudo systemctl stop electron');
+      }
     };
   };
 

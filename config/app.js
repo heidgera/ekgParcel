@@ -2,7 +2,7 @@ module.exports = {
   showDevTools: true,
   monitorConfig: true,
   io: {
-    manufacturer: 'Arduino LLC',
+    manufacturer: 'Microsoft',
   }
   // windows: [
   //   {
