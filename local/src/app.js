@@ -5,7 +5,8 @@ var obtains = [
   './src/controller.js',
   'fs',
   'µ/audio.js',
-  'child_process'
+  'child_process',
+  'µ/utilities.js'
 ];
 
 var electron = require('electron');
@@ -14,7 +15,7 @@ var electron = require('electron');
 
 var openDialog = (method, config)=>{return electron.ipcRenderer.invoke('dialog', method, config)};
 
-obtain(obtains, ({Graph}, { TempControl }, fs, {audio},{execSync})=> {
+obtain(obtains, ({Graph}, { TempControl }, fs, {audio},{execSync}, {averager})=> {
 
   exports.app = {};
 
@@ -44,6 +45,7 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio},{execSync})=> {
     //create the controller object
     console.log(config);
     var tempControl = new TempControl(config.io);
+    var ave = new averager(10);
 
     //start the program with the controls disabled
     // µ('input').forEach(item => item.disabled = true);
@@ -77,8 +79,8 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio},{execSync})=> {
 
     //set graphing ranges for the temperature traces
     crnTmp.setRanges({y: {
-      min: -50,
-      max: 50,
+      min: -30,
+      max: 30,
     }});
 
 
@@ -166,6 +168,8 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio},{execSync})=> {
 
     tempControl.on('envelope', cnt=>{
       cnt = cnt;
+      ave.addSample(cnt);
+      if(ave.ave > 48 && ave.ave < 52) cnt = 0;
       tempTime.clear();
       //audio.left.changeFrequency(cnt,20);
       var bin = Math.min(4,Math.max(0,Math.floor(cnt/10)));
