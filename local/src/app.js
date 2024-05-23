@@ -76,8 +76,8 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio})=> {
 
     //set graphing ranges for the temperature traces
     crnTmp.setRanges({y: {
-      min: -5,
-      max: 55,
+      min: -50,
+      max: 50,
     }});
 
 
@@ -153,8 +153,9 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio})=> {
     setTimeout(()=>{tempTime.draw(),console.log("drawing")},500);
 
     var testInt = setInterval(()=>{
-      var osc = (Date.now()/4000.)*Math.PI;
-      tempControl.emit("envelope",Math.max(Math.cos(osc)*30+20+Math.sin(Date.now()/200)*10+Math.cos(Date.now()/100)*5,0));
+      var osc = (Date.now()/1500.)*Math.PI;
+      //tempControl.emit("envelope",Math.cos(osc)*30+Math.sin(Date.now()/200)*10+Math.cos(Date.now()/100)*5);
+      tempControl.emit("envelope",50*Math.pow(Math.sin(osc),63) * Math.sin(osc+1.5)*8);
     },20);
 
     var prevMin = 0;
@@ -198,36 +199,36 @@ obtain(obtains, ({Graph}, { TempControl }, fs, {audio})=> {
       clearInterval(testInt);
     }
 
-    var countdown = (which)=>{
-      µ(".count",Wait)[which].classList.add('flip');
-      setTimeout(()=>{
-        µ(".count",Wait)[which].classList.remove('flip');
-      }, 10);
-
-      setTimeout(()=>{
-        if(which<2) countdown(which+1);
-        else {
-          Wait.classList.remove('show');
-          userTimeout = setTimeout(()=>{
-            inUse = false;
-            Attract.classList.add('show');
-          }, 30000);
-        }
-      }, 1000);
-    }
+      // var countdown = (which)=>{
+      //   µ(".count",Wait)[which].classList.add('flip');
+      //   setTimeout(()=>{
+      //     µ(".count",Wait)[which].classList.remove('flip');
+      //   }, 10);
+      //
+      //   setTimeout(()=>{
+      //     if(which<2) countdown(which+1);
+      //     else {
+      //       Wait.classList.remove('show');
+      //       userTimeout = setTimeout(()=>{
+      //         inUse = false;
+      //         Attract.classList.add('show');
+      //       }, 30000);
+      //     }
+      //   }, 1000);
+      // }
 
     document.onkeydown = (e)=> {
-      if(e.key == ' ' && !inUse){
-        inUse = true;
-        Attract.classList.remove('show');
-        setTimeout(()=>{
-          Wait.classList.add('show');
-          µ(".count",Wait)[0].classList.add('flip');
-          setTimeout(()=>{
-            countdown(0);
-          },500);
-        },500);
-      }
+      // if(e.key == ' ' && !inUse){
+      //   inUse = true;
+      //   Attract.classList.remove('show');
+      //   setTimeout(()=>{
+      //     Wait.classList.add('show');
+      //     µ(".count",Wait)[0].classList.add('flip');
+      //     setTimeout(()=>{
+      //       countdown(0);
+      //     },500);
+      //   },500);
+      // }
     };
   };
 

@@ -1,7 +1,7 @@
 module.exports = {
   showDevTools: true,
   io: {
-    manufacturer: 'Microsoft',
+    manufacturer: 'Arduino LLC',
   }
   // windows: [
   //   {
